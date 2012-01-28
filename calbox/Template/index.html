@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}CalBOX{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<p>歡迎, {{ user.username }}. 感謝您登入.</p>
+{% else %}
+  <p>歡迎, 如需更多操作請登入.</p>
+{% endif %}
+{% endblock %}

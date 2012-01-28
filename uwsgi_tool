@@ -1,0 +1,40 @@
+#!/bin/bash
+uwsgi_module=wsgi
+log_dir=uwsgi_log
+datetime=$(date +%Y-%m-%H-%k-%M-%S)
+echo uwsgi_module path :${uwsgi_module}
+echo log_dir path:${log_dir}
+echo pwd :$(pwd)
+function uws_start() {
+	echo 'state uwsgi'
+	if test ! -d ${log_dir}  ;then
+		echo 'dir path no exist'
+		mkdir ${log_dir}
+	fi
+	uwsgi -s :9090 \
+				-w ${uwsgi_module} \
+				--master --pidfile=/tmp/project-master.pid \
+				--daemonize=./${log_dir}/uwsgi_${datetime}.log \
+				--processes=5 &
+}
+
+function uws_stop() {
+	echo 'stop uwsgi'
+	#kill -SIGTERM $(ps aux | grep uwsgi | grep $uwsgi_module | awk '{print $2}') 
+	killall -9 uwsgi 
+}
+
+function uws_state() {
+  ps aux | grep $uwsgi_module
+}
+
+if [ "$1" == "start" ] ; then
+	uws_start ;
+elif [ "$1" == "stop" ] ; then
+	uws_stop ;
+elif [ "$1" == "restart" ] || [ "$#" == "0" ]  ; then
+	uws_stop ;
+	uws_start ;
+elif [ "$1" == "state" ] ; then
+	uws_state ;
+fi

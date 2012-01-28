@@ -1,0 +1,7 @@
+{% if user.is_authenticated %}
+帳號:{{ user.username }}
+<a href="/accounts/logout/">登出</a>
+<a href="/accounts/password_change">變更密碼</a>
+{% else %}
+  <a href="/accounts/login/">登入</a>
+{% endif %}
