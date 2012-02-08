@@ -23,3 +23,7 @@ PROMPT = 2
 
 #run expect shell 
 RUNCALSHELL = '/Users/DREAM/Desktop/CAL-X/cal_python_test/demo.sh'
+
+LANG_C = 11
+LANG_CC = 1
+LANG_JAVA = 10

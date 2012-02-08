@@ -6,7 +6,7 @@ echo uwsgi_module path :${uwsgi_module}
 echo log_dir path:${log_dir}
 echo pwd :$(pwd)
 function uws_start() {
-	echo 'state uwsgi'
+	echo 'start uwsgi'
 	if test ! -d ${log_dir}  ;then
 		echo 'dir path no exist'
 		mkdir ${log_dir}

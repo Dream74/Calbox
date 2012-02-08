@@ -3,11 +3,11 @@ from example_cc import hello as hello_cc
 from example_java import hello as hello_java
 
 def example_hello( lang ) :
-	if lang == 'c' :
+	if lang == '11' :
 		return hello_c()
-	if lang == 'cc' :
+	if lang == '1' :
 		return hello_cc()
-	if lang == 'java' :
+	if lang == '10' :
 		return hello_java()
 	return '' 
 

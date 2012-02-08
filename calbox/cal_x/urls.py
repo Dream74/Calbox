@@ -7,5 +7,6 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('calbox.cal_x.views',
 	(r'^$', 'code'),
 	(r'^update_code/$', 'update_post_code'),
+	(r'^doc/(\d+)$', 'question_doc'),
 	#(r'^cal/$', 'cal.views.cal'),
 )
