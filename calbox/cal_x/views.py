@@ -3,14 +3,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
 from kernel.compiler import core
 from example.example import example_hello
+from calbox.cal_x.question.dbapi import get_all_question
 def code(request):
 	if not request.user.is_authenticated():
 		return HttpResponseRedirect("/accounts/login/")
 	c = {}
 	c.update( csrf(request) )
-	
 	example_lang = request.GET.get('example_lang', '' )
-	c.update( { 'user' : request.user, 'code' : example_hello( example_lang )  })
+	c.update( { 'user' : request.user, 'code' : example_hello( example_lang ), 'q_list' : get_all_question()  })
 	return render_to_response('cal_x/index.html', c)
 
 from calbox.cal_x.usr_code.dbapi import insert_code
@@ -25,7 +25,7 @@ def update_post_code(request):
 		m_lang = request.POST.get('lang', '')
 		m_code = request.POST.get('code', '' )
 		m_question = request.POST.get('question', '')
-		html = 'lang :%s<br>user :%s <br>code :%s <br>qustion :%s' % ( m_lang, m_user, m_code, m_question )
+		#html = 'lang :%s<br>user :%s <br>code :%s <br>qustion :%s' % ( m_lang, m_user, m_code, m_question )
 		#return HttpResponse( html )
 		if m_user != '' and m_code != '' and m_question != '' and m_lang :
 			#html = "update"	

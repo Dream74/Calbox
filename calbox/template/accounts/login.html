@@ -1,0 +1,22 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}登入{% endblock  %}
+{% block content %}
+<a href="/accounts/signup/">創新帳號</a>
+<a href="/accounts/password_reset/">忘記密碼</a>
+{% if form.errors %}
+<p>你的帳號與密碼不符合</p>
+{% endif %}
+
+<form action="{% url django.contrib.auth.views.login %}" method="post">{% csrf_token %}
+  {% for field in form %}
+  <p>
+    {{ field.label_tag }}: {{ field }}
+    {{ field.errors }}
+  </p>
+  {% endfor %}
+  <p><input type="submit" value="Login" /></p>
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}
