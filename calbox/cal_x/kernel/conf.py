@@ -27,3 +27,15 @@ RUNCALSHELL = '/Users/DREAM/Desktop/CAL-X/cal_python_test/demo.sh'
 LANG_C = 11
 LANG_CC = 1
 LANG_JAVA = 10
+
+from shutil import rmtree
+from os.path import exists
+def del_TEMP_OUTPUT_dir( mda ):
+  _dir = BINARY_DIR + mda + '/'
+  if exists( _dir ) :
+    rmtree( _dir )
+
+  _dir = OUTPUT_DIR + mda + '/'
+  if exists( _dir ) :
+    rmtree( _dir )
+

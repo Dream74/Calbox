@@ -22,6 +22,8 @@
 <script src="/jquery-ui/ui/jquery.ui.core.js"></script>
 <script src="/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script src="/jquery-ui/ui/jquery.ui.tabs.js"></script>
+
+<script src="/JS/date.js"></script>
 <script language="javascript">
 $(function() {
 	$( "#tabs" ).tabs({
@@ -35,13 +37,24 @@ $(function() {
 	});
 
 	$("#lang").change(function(){ //事件發生
-    $("#example").attr( "href", "?example_lang="+ $(this).val() );
+		getmycode();
 	});
-	
+
 	$("#question").change(function(){ //事件發生
-    $("#tabs .doc ").attr( "href", "/cal-x/doc/"+ $(this).val() );
+    $("#tabs-2").load("/cal-x/doc/"+ $(this).val());
+		getmycode();
 	});
   
+  $("#tabs-2").load("/cal-x/doc/" + $("#question").val());
+
+	function getmycode() {
+  	$.post( '/cal-x/mycode/', { lang: $('#lang').val(), question: $('#question').val(), csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val()  },
+      function( data ) {
+        	editor.setValue( data );
+      }, 'text');
+	}
+	getmycode();
+
 	/* attach a submit handler to the form */
   $("#codeform").submit(function(event) {
     /* stop form from submitting normally */
@@ -54,12 +67,14 @@ $(function() {
         csrf = $form.find( 'input[name="csrfmiddlewaretoken"]' ).val(),
         code = editor.getValue(),
         url = $form.attr( 'action' );
+		$form.find('input[type="submit"]').attr("disabled", true);
 		// alert("action :" + url + "lang :"+ lang+ "question :"+question+"code :" + code + "csrf :" + csrf);
     /* Send the data using post and put the results in a div */
      $.post( url, { lang: lang, question: question, code : code, csrfmiddlewaretoken : csrf  },
       function( data ) {
           //var content = $( data ).find( '#content' );
 					alert( data.message  )
+		$form.find('input[type="submit"]').attr("disabled", false);
       }, 'json');
 
   });
@@ -69,14 +84,51 @@ $(function() {
     lineNumbers: true,
     matchBrackets: true,
     mode: "text/x-csrc",
+		onChange: function () { $("#state").text("程式碼修改中"); scheduleNotification();  },
   });
- 
+
 	$("#code_theme").change(function(){ //事件發生
-  	editor.setOption("theme", $(this).val() );
+    editor.setOption("theme", $(this).val());
+	});
+	
+	$("#example").click(function(){ //事件發生
+    $.get("/cal-x/example_code/"+ $('#lang').val(),
+			function( data ){
+    		editor.setValue( data );
+			});
 	});
 
-});
-
+	function scheduleNotification() {
+  	var timeValue = "1";
+   	var triggerTime = Date.parse(timeValue);
+   	if (!triggerTime) 
+ 		{
+	 		status("Sorry, I didn't understand when you want the notification. Enter &quot;2 minutes&quot; for example.");
+	 		return;
+	 	}
+	 	var remaining = triggerTime.getTime() - (new Date()).getTime();
+	 	if (remaining < 2000) remaining = 2000;
+	  	clearTimeout(timer);
+	  	timer = setTimeout(function()
+			{
+				$("#state").text("程式碼上傳中");
+	    	var $form = $( "#codeform" ),
+        	lang = $form.find( '#lang' ).val(),
+   				question = $form.find( '#question' ).val(),
+   	    	csrf = $form.find( 'input[name="csrfmiddlewaretoken"]' ).val(),
+        	code = editor.getValue(),
+        	url = "/cal-x/update_code/"
+					// alert("action :" + url + "lang :"+ lang+ "question :"+question+"code :" + code + "csrf :" + csrf);
+   				/* Send the data using post and put the results in a div */
+     			$.post( url, { lang: lang, question: question, code : code, csrfmiddlewaretoken : csrf  },
+      	function( data ) {
+        	//var content = $( data ).find( '#content' );
+					$("#state").text("程式碼上傳成功");
+      	}, 'text');
+			}, remaining);
+	 	} 
+	});
+var timer ;
 </script>
 
 {% endblock %}
@@ -92,16 +144,17 @@ $(function() {
 <a>變更密碼</a>
 {% endif %}
 
-<a>題庫</a>
+<button>題庫</button>
 <button>歷史</button>
-<button>求救</button>
+<button id="help" >求救</button>
 <button>問題</button>
-<form id="codeform" action="{% url calbox.cal_x.views.update_post_code %}" method="POST">{% csrf_token %}
+<label id="state">系統初始化</label>
+<form id="codeform" action="/cal-x/core/" method="POST">{% csrf_token %}
 <label>題目</label>
 <select name="question" id="question" >
 {% if q_list %}
 	{% for list in q_list %}
-	<option value="{{ list.id }}" label="{{ list.title }}"/>
+	<option value="{{ list.id }}" label="{{ list.title }}">{{ list.title }}</option>
 	{% endfor %}
 {% endif %}
 </select>
@@ -112,11 +165,11 @@ $(function() {
 	<option value="1" label="C++" title="C++ (gcc-4.6.1)" >C++</option>
 	<option value="10" label="Java"  title="Java (sun-jdk-1.6.0.30)" >Java</option>
 </select>
-<li><a id="example" href="?example_lang=11">範例</a></li>
+<li><button id="example">範例</button></li>
 <div id="tabs">
 	<ul>
 		<li><a href="#tabs-1">Code</a></li>
-		<li><a class="doc" href="/cal-x/doc/1">Question Doc</a></li>
+		<li><a href="#tabs-2">Question Doc</a></li>
 	</ul>
 	<div id="tabs-1">
 	<p>Select a theme: <select id="code_theme">
@@ -133,6 +186,7 @@ $(function() {
 	<textarea id="code"	name="code" rows="10" cols="100" placeholder="<Input your Code>" >{{ code }}</textarea>		
 	<input type="submit" value="送出" />
 	</div>
+	<div id="tabs-2"></div>
 </div>
 
 {% endblock %}

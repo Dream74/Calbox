@@ -18,6 +18,14 @@ def core( mda, user, code, question):
   else :
    return json_message( com_msn, 'Complit error')
 
+def get_code( mda ):
+  code_dir = FILE_DIR + mda + '/'
+  if not os.path.exists( code_dir ) or not os.path.exists( code_dir + FILE_NAME  + FE_CC ):
+    return ""
+
+  code_file = open(  code_dir + FILE_NAME  + FE_CC , 'r' )
+  return code_file.read()
+
 def update_code( mda, code ):  
   code_dir = FILE_DIR + mda + '/' 
   if not os.path.exists( code_dir ):
@@ -25,7 +33,7 @@ def update_code( mda, code ):
   
   code_file = open(  code_dir + FILE_NAME  + FE_CC , 'w' )
   code_file.write( code.encode('utf8') )
-  code_file.close()
+  return code_file.close()
 
 def complit( mda ):
   file_code = FILE_DIR + mda + '/' +FILE_NAME + FE_CC 
@@ -57,10 +65,13 @@ def run( mda, m_question ):
     for list in question_io_list :
       mess = run_question( mda, cmd, output_file,  list.input_text.encode('utf-8'), list.output_text.encode('utf-8'), list.occult ) 
       if mess :
+        del_TEMP_OUTPUT_dir( mda )
         return mess
 
+    del_TEMP_OUTPUT_dir( mda )
     return json_message( 'Success', 'OK' )
   except :
+    del_TEMP_OUTPUT_dir( mda )
     return json_message( 'Question no get', '??' )
 
 def run_question( mda, cmd, output_file, question_input, question_output, occult ):
