@@ -25,7 +25,7 @@ def update_post_code( request, com_run ):
 		m_question = request.POST.get('question', '')
 		#html = 'lang :%s<br>user :%s <br>code :%s <br>qustion :%s' % ( m_lang, m_user, m_code, m_question )
 		#return HttpResponse( html )
-		if m_user != '' and m_code != '' and m_question != '' and m_lang != '' :
+		if m_user != '' and m_question != '' and m_lang != '' :
 			#html = "update"	
 			html = core( m_lang, m_user, m_code, m_question, com_run ) 
 			if com_run and json.loads( html )['type'].encode('utf8') == 'OK': 

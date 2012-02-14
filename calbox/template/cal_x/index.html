@@ -144,10 +144,10 @@ var timer ;
 <a>變更密碼</a>
 {% endif %}
 
-<button>題庫</button>
-<button>歷史</button>
-<button id="help" >求救</button>
-<button>問題</button>
+<button disabled="true">題庫</button>
+<button disabled="true">歷史</button>
+<button disabled="true" id="help" >求救</button>
+<button disabled="true">問題</button>
 <label id="state">系統初始化</label>
 <form id="codeform" action="/cal-x/core/" method="POST">{% csrf_token %}
 <label>題目</label>
