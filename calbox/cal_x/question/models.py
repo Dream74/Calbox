@@ -12,9 +12,10 @@ class Question_Code( models.Model ) :
 		return self.title 
 
 	def save(self, *args, **kwargs):
-		try :
-			Permission.objects.get( name=self.title )
-		except Permission.DoesNotExist:
+		#try :
+		#	Permission.objects.get( name=self.title )
+		#except Permission.DoesNotExist:
+		if not Permission.objects.filter( name=self.title ):
 			from django.contrib.contenttypes.models import ContentType
 			p = Permission( name=self.title, content_type=ContentType.objects.get( name='question_ code'), codename=self.title+'_'+ self.usr.username)
 			p.save()

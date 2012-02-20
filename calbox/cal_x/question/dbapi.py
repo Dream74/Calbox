@@ -16,12 +16,15 @@ def get_question_doc( q_id ):
     return "No Doc"
 
 from django.contrib.auth.models import User
-import types
 def get_usr_question( usr ):
   q_list = []
-  s_perm = User.objects.get( username=usr).user_permissions.all()
+  u = User.objects.get( username=usr)
+  s_perm = u.user_permissions.all()
   for ques in Question_Code.objects.all():
     if ques.perm in s_perm:
       q_list.append(ques)
-      
+    else :
+      for group in u.groups.all():
+        if ques.perm in group.permissions.all() :
+          q_list.append(ques)
   return q_list
