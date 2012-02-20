@@ -14,3 +14,14 @@ def get_question_doc( q_id ):
     return Question_Code.objects.get( id = q_id ).doc
   except Question_Code.DoesNotExist:
     return "No Doc"
+
+from django.contrib.auth.models import User
+import types
+def get_usr_question( usr ):
+  q_list = []
+  s_perm = User.objects.get( username=usr).user_permissions.all()
+  for ques in Question_Code.objects.all():
+    if ques.perm in s_perm:
+      q_list.append(ques)
+      
+  return q_list

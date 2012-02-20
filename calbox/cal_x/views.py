@@ -1,13 +1,15 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
-from calbox.cal_x.question.dbapi import get_all_question
+#from calbox.cal_x.question.dbapi import get_all_question
+from calbox.cal_x.question.dbapi import get_usr_question
 def code(request):
 	if not request.user.is_authenticated():
 		return HttpResponseRedirect("/accounts/login/")
 	c = {}
 	c.update( csrf(request) )
-	c.update( { 'user' : request.user, 'q_list' : get_all_question()  })
+	#c.update( { 'user' : request.user, 'q_list' : get_all_question()  })
+	c.update( { 'user' : request.user, 'q_list' : get_usr_question( request.user)  })
 	return render_to_response('cal_x/index.html', c)
 
 from kernel.compiler import core
