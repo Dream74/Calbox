@@ -3,9 +3,8 @@ import os
 import subprocess
 from conf import *
 from re_message import json_message
-from calbox.cal_x.question.dbapi import get_all_question, get_question_io
+from calbox.cal_x.question.models import Question_IO
 def core( mda, user, code, question):
-  #return get_all_question( 1 )[0].id
   if len( code ) > CODE_FILE :
     return json_message( 'Code size limit exceeded', 'Code size limit')
   update_code( mda, code )
@@ -60,7 +59,7 @@ def run( mda, m_question ):
   cmd += ' && ulimit -Sv ' + MEMORY_SIZE
   cmd += ' && ulimit -Sm ' + MEMORY_SIZE
   cmd += ' && ulimit -Sd ' + MEMORY_SIZE + ' ;'
-  question_io_list = get_question_io( m_question ) 
+  question_io_list = Question_IO.objects.get_question_io( m_question ) 
   try :
     for list in question_io_list :
       mess = run_question( mda, cmd, output_file,  list.input_text.encode('utf-8'), list.output_text.encode('utf-8'), list.occult ) 
