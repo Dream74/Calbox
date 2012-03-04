@@ -76,7 +76,7 @@ $(function() {
 		
 						line = editor.getCursor().line + 1 ;
 						ch = editor.getCursor().ch + 1 ;
-					    $("#state").text( line + " : " + ch);
+					  //  $("#state").text( line + " : " + ch);
 						if ( editor.lineInfo(editor.getCursor().line).markerText != null  )
 						{
 							editor.setOption("readOnly", true );
@@ -116,20 +116,19 @@ $(function() {
   
   $("#tabs-2").load("/cal-x/doc/" + $("#question").val());
 
-	var readonly = new Array(2) ;
-	readonly[0] = 3 ; 
-	readonly[1] = 5 ; 
-
 	function getmycode() {
   	$.post( '/cal-x/mycode/', { lang: $('#lang').val(), question: $('#question').val(), csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val()  },
       function( data ) {
-        	editor.setValue( data );
-					for ( var i = 0; i < readonly.length; i++)
+        	editor.setValue( data.code );
+					var readline = data.readline.split(",");
+					for ( var i = 0; i < readline.length; i++)
 					{
-						editor.setLineClass(readonly[i], "activeline");
-						editor.setMarker(readonly[i],"");
+						//$("#state").text($("#state").text()+","+readline[i]);
+						line = parseInt(readline[i],10)
+						editor.setLineClass(line, "activeline");
+						editor.setMarker(line,"");
 					}
-    }, 'text');
+    }, 'json');
 	}
 	getmycode();
 

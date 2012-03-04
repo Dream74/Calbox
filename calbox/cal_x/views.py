@@ -41,7 +41,7 @@ def question_doc(request, q_id ):
 from kernel.compiler import get_code
 def mycode( request ):
 	if not request.user.is_authenticated():
-		return ""
+		return HttpResponse( json.dumps({"code": "" , "readline": ''}, sort_keys=True, indent=4, ensure_ascii = False) )
 
 	if request.method == 'POST' :
 		m_user = request.user.username
@@ -50,8 +50,9 @@ def mycode( request ):
 		#html = 'lang :%s<br>user :%s <br>qustion :%s' % ( m_lang, m_user, m_question )
 		#return HttpResponse( html )
 		if m_user != '' and m_question != '' and m_lang != '' :
-			return HttpResponse( get_code( m_lang, m_user, m_question ) )
-	return HttpResponse( '' )
+			return HttpResponse( json.dumps({"code": get_code( m_lang, m_user, m_question ) , "readline": '3,5'}, sort_keys=True, indent=4, ensure_ascii = False) )
+			#return HttpResponse( get_code( m_lang, m_user, m_question ) )
+	return HttpResponse( json.dumps({"code": "" , "readline": ''}, sort_keys=True, indent=4, ensure_ascii = False) )
 
 	
 from example.example import example_hello
