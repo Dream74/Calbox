@@ -5,7 +5,9 @@
 <link rel="stylesheet" TYPE="text/css" href="/codemirror/doc/docs.css">
 <script src="/codemirror/lib/codemirror.js"></script>
 <script src="/codemirror/mode/clike/clike.js"></script>
-<style>.CodeMirror {border: 2px inset #dee;}</style>
+<style type="text/css">
+.CodeMirror {border: 2px inset #dee;} 
+.activeline {background: #E0E0E0  !important; }</style>
 
 <link rel="stylesheet" href="/codemirror/theme/neat.css">
 <link rel="stylesheet" href="/codemirror/theme/elegant.css">
@@ -36,6 +38,73 @@ $(function() {
 		}
 	});
 
+
+	var recordCursorline ;
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+		lineWrapping: true,
+    lineNumbers: true,
+    matchBrackets: true,
+    mode: "text/x-csrc",
+		onChange: function () { $("#state").text("程式碼修改中"); scheduleNotification();  },
+		onKeyEvent: function (i, e) 
+		{
+			if (e.type == "keydown") {
+				line = i.getCursor().line ;
+				ch = i.getCursor().ch ;
+				switch (e.keyCode) 
+				{
+					case 8: // backspace
+					if ( ch == 0 && line > 0 &&  editor.lineInfo(line - 1).markerText != null )
+					{								
+						return true ; // Don't do it
+					}
+					break;
+				case 46: // delete 	
+				if ( ch == i.getLine(line).length && line < i.lineCount() - 1 && editor.lineInfo(line + 1).markerText != null )
+				{								
+					return true ;// Don't do it
+				}						
+				break;
+				} 							
+			}
+		},
+		onFocus: function () { 
+			recordCursorline = editor.getCursor().line ;
+		},
+		onCursorActivity: function () 
+		{ 
+		
+						line = editor.getCursor().line + 1 ;
+						ch = editor.getCursor().ch + 1 ;
+					    $("#state").text( line + " : " + ch);
+						if ( editor.lineInfo(editor.getCursor().line).markerText != null  )
+						{
+							editor.setOption("readOnly", true );
+							recordCursorline = editor.getCursor().line ;
+						}
+						else if ( editor.somethingSelected() )
+						{
+							var minline = editor.getCursor(true).line ;
+							var maxline = editor.getCursor(false).line ;
+							
+							for ( ; minline <= maxline ; ++minline )
+							{
+								if ( editor.lineInfo(minline).markerText != null )
+								{
+									editor.setOption("readOnly", true );
+									return ;
+								}
+							}
+							editor.setOption("readOnly", false) ;
+						}
+						else 
+						{
+							editor.setOption("readOnly", false) ;
+							recordCursorline = editor.getCursor().line ;
+						}
+		},
+  });
+
 	$("#lang").change(function(){ //事件發生
 		getmycode();
 	});
@@ -47,11 +116,20 @@ $(function() {
   
   $("#tabs-2").load("/cal-x/doc/" + $("#question").val());
 
+	var readonly = new Array(2) ;
+	readonly[0] = 3 ; 
+	readonly[1] = 5 ; 
+
 	function getmycode() {
   	$.post( '/cal-x/mycode/', { lang: $('#lang').val(), question: $('#question').val(), csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val()  },
       function( data ) {
         	editor.setValue( data );
-      }, 'text');
+					for ( var i = 0; i < readonly.length; i++)
+					{
+						editor.setLineClass(readonly[i], "activeline");
+						editor.setMarker(readonly[i],"");
+					}
+    }, 'text');
 	}
 	getmycode();
 
@@ -77,14 +155,6 @@ $(function() {
 		$form.find('input[type="submit"]').attr("disabled", false);
       }, 'json');
 
-  });
-
-
-  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-    lineNumbers: true,
-    matchBrackets: true,
-    mode: "text/x-csrc",
-		onChange: function () { $("#state").text("程式碼修改中"); scheduleNotification();  },
   });
 
 	$("#code_theme").change(function(){ //事件發生
@@ -128,7 +198,7 @@ $(function() {
 			}, remaining);
 	 	} 
 	});
-var timer ;
+	var timer ;
 </script>
 
 {% endblock %}

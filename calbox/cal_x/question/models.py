@@ -20,7 +20,7 @@ class CodeManager(models.Manager):
     q_list = []
     u = User.objects.get( username=usr)
     s_perm = u.user_permissions.all()
-    for ques in Question_Code.objects.all():
+    for ques in Question_Code.objects.filter( occult=False):
       if ques.perm in s_perm:
         q_list.append(ques)
       else :
@@ -34,6 +34,7 @@ class Question_Code( models.Model ) :
 	doc = models.TextField()
 	usr = models.ForeignKey( User )
 	perm = models.OneToOneField( Permission )
+	occult = models.BooleanField()
 	objects = CodeManager()
 	def __unicode__(self):
 		return unicode(self.title)
@@ -73,4 +74,15 @@ class Question_IO( models.Model ) :
 	def __str__(self):
 		return self.question
 
+class TimeManager(models.Manager):
+  pass
 
+class Question_Time( models.Model ):
+	start = models.DateTimeField()
+	end = models.DateTimeField()
+	perm = models.OneToOneField( Permission )
+	objects = TimeManager()
+	def __unicode__(self):
+		return unicode(self.perm)
+	def __str__(self):
+		return self.perm
