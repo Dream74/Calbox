@@ -7,8 +7,8 @@ def code(request):
 		return HttpResponseRedirect("/accounts/login/")
 	c = {}
 	c.update( csrf(request) )
-	#c.update( { 'user' : request.user, 'q_list' : get_all_question()  })
-	c.update( { 'user' : request.user, 'q_list' : Question_Code.objects.get_usr_question( request.user)  })
+	c.update( { 'user' : request.user, 'q_list' : Question_Code.objects.get_all_question()  })
+	#c.update( { 'user' : request.user, 'q_list' : Question_Code.objects.get_usr_question( request.user)  })
 	return render_to_response('cal_x/index.html', c)
 
 from kernel.compiler import core
@@ -50,8 +50,8 @@ def mycode( request ):
 		#html = 'lang :%s<br>user :%s <br>qustion :%s' % ( m_lang, m_user, m_question )
 		#return HttpResponse( html )
 		if m_user != '' and m_question != '' and m_lang != '' :
-			return HttpResponse( json.dumps({"code": get_code( m_lang, m_user, m_question ) , "readline": '3,5'}, sort_keys=True, indent=4, ensure_ascii = False) )
-			#return HttpResponse( get_code( m_lang, m_user, m_question ) )
+			return HttpResponse( json.dumps({"code": get_code( m_lang, m_user, m_question ) , "readline": ''}, sort_keys=True, indent=4, ensure_ascii = False) )
+			#return HttpResponse( json.dumps({"code": get_code( m_lang, m_user, m_question ) , "readline": '0,2,5,6,'}, sort_keys=True, indent=4, ensure_ascii = False) )
 	return HttpResponse( json.dumps({"code": "" , "readline": ''}, sort_keys=True, indent=4, ensure_ascii = False) )
 
 	

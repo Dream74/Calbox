@@ -3,7 +3,7 @@ import os
 import subprocess
 from conf import *
 from re_message import json_message
-from calbox.cal_x.question.models import Question_Code
+from calbox.cal_x.question.models import Question_IO
 def core( mda, user, code, question):
   if len( code ) > CODE_FILE :
     return json_message( 'Code size limit exceeded', 'Code size limit')
@@ -59,7 +59,7 @@ def run( mda, m_question ):
   cmd += ' && ulimit -Sv ' + MEMORY_SIZE
   cmd += ' && ulimit -Sm ' + MEMORY_SIZE
   cmd += ' && ulimit -Sd ' + MEMORY_SIZE + ' ;'
-  question_io_list = Question_Code.objects.get_question_io( m_question )
+  question_io_list = Question_IO.objects.get_question_io( m_question )
   
   try :
     for list in question_io_list :
@@ -90,13 +90,13 @@ def run_question( mda, cmd, output_file, question_input, question_output, occult
     code_output = open( output_file, 'r' ).read()
     #return type(question_output ) 
     #return 'code_output :' + code_output + 'input :' + question_input + 'output :' + question_output
-    if question_output == code_output :
+    if question_output.replace('\r\n', '\n') == code_output :
       return False
     else :
       if occult :
         return json_message( '隱藏數據不給看', 'Run_OK' )
       else :
-        return json_message( '數據輸入 :' + question_input + '\n正確輸出 ：' + question_output + '\n你程式輸出 :' + code_output, 'check_error' )
+        return json_message( '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<', 'check_error' )
   else :
     return json_message( errm, 'run_time_error' )
 

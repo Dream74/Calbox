@@ -15,7 +15,16 @@ class Question_Code_Admin( admin.ModelAdmin ):
         ques.delete() 
 
 class Question_IO_Admin( admin.ModelAdmin ):
-	question_io = ( 'input_text', 'output_text', 'question' , 'usr', 'occult' )
+	#question_io = ( 'input_text', 'output_text', 'question' , 'usr', 'occult' )
+  fieldsets = [ 
+        ('input_text', {'fields':['input_text']}),
+        ('output_text', {'fields':['output_text']}),
+        ('question', {'fields':['question']}),
+  ]  
+  def save_model(self, request, obj, form, change):
+    obj.usr = request.user
+    obj.occult = False
+    obj.save() 
 
 class Question_Time_Admin( admin.ModelAdmin ):
 	question_time = ( 'start', 'end', 'perm'  )

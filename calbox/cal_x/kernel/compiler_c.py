@@ -44,7 +44,7 @@ def complit( mda ):
   if not os.path.exists( binary_dir ) :
     os.makedirs( binary_dir )
     
-  pingPopen = subprocess.Popen(args='gcc '+ file_code + ' -o '+ binary_dir + FILE_NAME , shell=True, stderr=subprocess.PIPE)
+  pingPopen = subprocess.Popen(args='gcc '+ file_code + ' -o '+ binary_dir + FILE_NAME + ' -std=c99 ', shell=True, stderr=subprocess.PIPE)
   pingPopen.wait()
   return pingPopen.stderr.read()
 
@@ -74,7 +74,6 @@ def run( mda, m_question ):
     return json_message( 'Question no get', '??' )
 
 def run_question( mda, cmd, output_file, question_input, question_output, occult ):
-  #return 'mda :' + mda + 'cmd :' + cmd + 'input :' + question_input + 'output :' + question_output
   p = subprocess.Popen( args= cmd + ' ' + BINARY_DIR + mda + '/' + FILE_NAME  ,
                         stdin = subprocess.PIPE,
                         stdout = open( output_file , 'w' ),
@@ -89,13 +88,13 @@ def run_question( mda, cmd, output_file, question_input, question_output, occult
     code_output = open( output_file, 'r' ).read()
     #return type(question_output ) 
     #return 'code_output :' + code_output + 'input :' + question_input + 'output :' + question_output
-    if question_output == code_output :
+    if question_output.replace('\r\n', '\n') == code_output :
       return False
     else :
       if occult :
         return json_message( '隱藏數據不給看', 'Run_OK' )
       else :
-        return json_message( '數據輸入 :' + question_input + '\n正確輸出 ：' + question_output + '\n你程式輸出 :' + code_output, 'check_error' ) 
+        return json_message( '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<', 'check_error' ) 
   else :
     return json_message( errm, 'run_time_error' )
 

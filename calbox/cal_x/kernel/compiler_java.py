@@ -89,13 +89,13 @@ def run_question( mda, cmd, output_file, question_input, question_output, occult
     code_output = open( output_file, 'r' ).read()
     #return type(question_output ) 
     #return 'code_output :' + code_output + 'input :' + question_input + 'output :' + question_output
-    if question_output == code_output :
+    if question_output.replace('\r\n', '\n') == code_output :
       return False
     else :
       if occult :
         return json_message( '隱藏數據不給看', 'Run_OK' )
       else :
-        return json_message( '數據輸入 :' + question_input + '\n正確輸出 ：' + question_output + '\n你程式輸出 :' + code_output, 'check_error' )
+        return json_message( '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<', 'check_error' )
   else :
     return json_message( errm, 'run_time_error' )
 
