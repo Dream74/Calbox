@@ -1,6 +1,8 @@
+{% spaceless %}
 <html>
   <head>
 		<title>{% block title %}accounts base{% endblock %}</title>
+{% block head %}{% endblock %}
 	</head>
   <body>
     {% block content %}
@@ -8,3 +10,4 @@
  {% include "footer.html" %}
   </body>
 </html>
+{% endspaceless %}

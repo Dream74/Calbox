@@ -35,4 +35,5 @@ def get_code(lang, user, question ):
 
 from hashlib import md5
 def mda( lang, user, question ) :
-	return md5( user.encode('utf-8')  + '_' + question.encode('utf-8')  ).hexdigest()
+  return user.encode('utf-8')  + '_' + question.encode('utf-8')
+  return md5( user.encode('utf-8')  + '_' + question.encode('utf-8')  ).hexdigest()

@@ -1,4 +1,4 @@
-{% extends "base.html"%}
+﻿{% extends "base.html"%}
 {% block title %}CAL-X{% endblock %}
 {% block head %}
 <link rel="stylesheet" TYPE="text/css" href="/codemirror/lib/codemirror.css">
@@ -16,23 +16,29 @@
 
 <link rel="stylesheet" TYPE="text/css" href="/jquery-ui/themes/base/jquery.ui.all.css">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ></script>
-<script type="text/javascript" src="/jquery-ui/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>
 <script type="text/javascript" src="/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="/jquery-ui/ui/jquery.ui.tabs.js"></script>
-
+<script>
+</script>
+<script type="text/javascript" src="/JS/cal-x/utility.js"></script>
+{% if user.is_authenticated %}
 <script type="text/javascript" src="/JS/date.js"></script>
-<script type="text/javascript" src="/JS/cal-x/main.js"></script>
-<script>var _wau = _wau || []; _wau.push(["tab", "p6vu4jv7d30x", "xrh", "left-upper"]);(function() { var s=document.createElement("script"); s.async=true; s.src="http://widgets.amung.us/tab.js";document.getElementsByTagName("head")[0].appendChild(s);})();</script>
+<script type="text/javascript" src="/JS/cal-x/login.js"></script>
+{% else %}
+<script type="text/javascript" src="/JS/cal-x/nologin.js"></script>
+{% endif %}
 {% endblock %}
+
 {% block content %}
 {% if user.is_authenticated %}
 <p>歡迎, {{ user.username }}. 感謝您登入.</p>
 <a href="/accounts/logout/" >登出</a>
-<a href="/accounts/password_change/">變更密碼</a>
+&nbsp;&nbsp;<a href="/accounts/password_change/">變更密碼</a>
 {% else %}
-  <p>歡迎, 如需更多操作請登入.</p>
+<p>歡迎, 如需更多操作請登入.</p>
 <a href="/accounts/login/" >登入</a>
-<a href="/accounts/password_reset/" >忘記密碼</a>
+&nbsp;&nbsp;<a href="/accounts/password_reset/" >忘記密碼</a>
 <a>變更密碼</a>
 {% endif %}
 
