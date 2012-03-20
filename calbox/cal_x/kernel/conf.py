@@ -1,7 +1,8 @@
 #compliter conf
-FILE_DIR = '/home/cal/ramdisk/code/'
-BINARY_DIR = '/home/cal/ramdisk/TEMP/'
-OUTPUT_DIR = '/home/cal/ramdisk/output/'
+CAL_X_HOME = '/dev/shm/ramdisk/'
+FILE_DIR = CAL_X_HOME + 'code/'
+BINARY_DIR = CAL_X_HOME + 'TEMP/'
+OUTPUT_DIR = CAL_X_HOME + 'output/'
 FILE_NAME = 'Main'
 FE_CC = '.cc'
 FE_C = '.c'
@@ -11,7 +12,7 @@ COM_CC = 'g++'
 COM_JAVA = 'javac'
 
 #run limit
-CPU_TIME = '5' # 5 sec
+CPU_TIME = '3' # 5 sec
 CODE_FILE =  str( 64 * 1024 / 2 )  # 64 KB
 MEMORY_SIZE = str( 500 * 1024 ) # 500MB
 #SOKET_NUM = '10'

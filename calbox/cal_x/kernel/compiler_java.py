@@ -97,6 +97,9 @@ def run_question( mda, cmd, output_file, question_input, question_output, occult
       else :
         return json_message( '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<', 'check_error' )
   else :
+    if errm == 'CPU time limit exceeded\n' :
+      return json_message( '', 'infinite_loop' )
+
     return json_message( errm, 'run_time_error' )
 
 

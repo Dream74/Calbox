@@ -75,8 +75,8 @@ def run( mda, m_question ):
     return json_message( 'Question no get', '??' )
 
 def run_question( mda, cmd, output_file, question_input, question_output, occult ):
-  #return 'mda :' + mda + 'cmd :' + cmd + 'input :' + question_input + 'output :' + question_output
-  p = subprocess.Popen( args= cmd + ' ' + BINARY_DIR + mda + '/' + FILE_NAME  ,
+  # ulimit -St CPU_TIME && -SV MEMORY_SIZE ... /XXX/code/mda/Main.cc
+  p = subprocess.Popen( args= 'cd '+ BINARY_DIR + mda + ' ; '+ cmd +  ' ./' + FILE_NAME,
                         stdin = subprocess.PIPE,
                         stdout = open( output_file , 'w' ),
                         stderr = subprocess.PIPE,
@@ -98,6 +98,9 @@ def run_question( mda, cmd, output_file, question_input, question_output, occult
       else :
         return json_message( '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<', 'check_error' )
   else :
+    if errm == 'CPU time limit exceeded\n' :
+      return json_message( '', 'infinite_loop' )
+
     return json_message( errm, 'run_time_error' )
 
 
