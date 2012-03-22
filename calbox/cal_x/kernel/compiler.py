@@ -21,16 +21,29 @@ def core(lang, user, code , question, com_run ):
     return 'lang code no support'
   return 'lang is no integer'
 
+from django.contrib.auth.models import User
+from calbox.cal_x.usr_code.models import Code
+from calbox.cal_x.question.models import Question_Code
 def get_code(lang, user, question ):
   if str.isdigit(  lang.encode('utf-8') ) : 
     lang_type = int( lang.encode('utf-8') ) 
+    code = ""
     if lang_type == 11 : # c
-      return get_code_c(mda( lang, user, question))
-    if lang_type == 1 : # c++
-	  	return get_code_cc(mda( lang, user, question))
-    if lang_type == 10 : # JAVA
-	  	return get_code_java(mda( lang, user, question))
-    return 'lang code no support'
+      code = get_code_c(mda( lang, user, question))
+    elif lang_type == 1 : # c++
+      code = get_code_cc(mda( lang, user, question))
+    elif lang_type == 10 : # JAVA
+      code = get_code_java(mda( lang, user, question))
+    else :
+      return 'lang code no support'
+    
+    if code == "" :
+      try :
+        return Code.objects.get( usr = User.objects.get( username = user ), lang = lang, question = Question_Code.objects.get( id = question )  ).code_text 
+      except Code.DoesNotExist:
+        return ""
+    else :
+      return code 
   return 'lang is no integer'
 
 from hashlib import md5

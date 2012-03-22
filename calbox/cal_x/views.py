@@ -12,7 +12,7 @@ def code(request):
 	return render_to_response('cal_x/index.html', c)
 
 from kernel.compiler import core, mda
-from calbox.cal_x.usr_code.models import Code
+from calbox.cal_x.usr_code.models import Code_Done, Code
 import json
 import datetime
 def update_post_code( request, com_run ):
@@ -36,12 +36,14 @@ def update_post_code( request, com_run ):
       try :
         html = core( m_lang, m_user, m_code, m_question, com_run ) 
       finally :    
-        if not request.user.is_authenticated(): 
+        if com_run : 
           from shutil import rmtree
           from kernel.conf import *
           rmtree( FILE_DIR + mda( m_lang, m_user, m_question)  )
+          if request.user.is_authenticated(): 
+            Code.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
       if com_run and json.loads( html )['type'].encode('utf8') == 'OK': 
-        Code.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
+        Code_Done.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
     else :
       html = 'have been space'
 

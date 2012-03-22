@@ -63,7 +63,7 @@ class IOManager(models.Manager):
     return Question_IO.objects.filter(question = Question_Code.objects.get( id = question_id )  ).order_by( 'occult', 'id')
 
 class Question_IO( models.Model ) :
-	input_text = models.TextField( null = True, blank = True )
+	input_text = models.TextField( blank = True )
 	output_text = models.TextField()
 	question = models.ForeignKey( Question_Code ) 
 	usr = models.ForeignKey( User )
