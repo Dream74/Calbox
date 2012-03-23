@@ -7,22 +7,22 @@ echo log_dir path:${log_dir}
 echo pwd :$(pwd)
 function uws_start() {
 	echo 'start uwsgi'
-	if test ! -d ${log_dir}  ;then
-		echo 'dir path no exist'
-		mkdir ${log_dir}
-	fi
-	uwsgi -s :9090 \
+#	if test ! -d ${log_dir}  ;then
+#		echo 'dir path no exist'
+#		mkdir ${log_dir}
+#	fi
+	sudo -u cal uwsgi -s :9090 \
 				-w ${uwsgi_module} \
 				--master --pidfile=/tmp/project-master.pid \
-				--daemonize=./${log_dir}/uwsgi_${datetime}.log \
-        --buffer-size=32768 \
 				--processes=30 &
+#				--daemonize=./${log_dir}/uwsgi_${datetime}.log \
+#        --buffer-size=32768 \
 }
 
 function uws_stop() {
 	echo 'stop uwsgi'
 	#kill -SIGTERM $(ps aux | grep uwsgi | grep $uwsgi_module | awk '{print $2}') 
-	killall -9 uwsgi 
+	sudo killall -9 uwsgi 
 }
 
 function uws_state() {
