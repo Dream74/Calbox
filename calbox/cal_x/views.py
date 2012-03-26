@@ -42,7 +42,7 @@ def update_post_code( request, com_run ):
           rmtree( FILE_DIR + mda( m_lang, m_user, m_question)  )
           if request.user.is_authenticated(): 
             Code.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
-      if com_run and json.loads( html )['type'].encode('utf8') == 'OK': 
+      if request.user.is_authenticated() and com_run and json.loads( html )['type'].encode('utf8') == 'OK': 
         Code_Done.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
     else :
       html = 'have been space'

@@ -1,4 +1,5 @@
 #compliter conf
+# -*- coding: utf-8 -*-
 CAL_X_HOME = '/dev/shm/ramdisk/'
 FILE_DIR = CAL_X_HOME + 'code/'
 BINARY_DIR = CAL_X_HOME + 'TEMP/'
@@ -18,10 +19,7 @@ MEMORY_SIZE = str( 500 * 1024 ) # 500MB
 #SOKET_NUM = '10'
 
 # json message type
-INPUT_OUTPUT = 0 
-COMPLITER = 1 
-PROMPT = 2
-
+OCCULT_IO = '你無法通過被隱藏的數據'
 #run expect shell 
 RUNCALSHELL = '/Users/DREAM/Desktop/CAL-X/cal_python_test/demo.sh'
 

@@ -13,7 +13,7 @@ class CodeManager(models.Manager):
       Code( usr = m_usr, lang = m_lang, question = Question_Code.objects.get( id = question_id ), code_text = m_code, updatetime = datetime.datetime.now()  ).save()
 
 class Code( models.Model ) : 
-  question = models.ForeignKey( Question_Code, unique=True )
+  question = models.ForeignKey( Question_Code )
   usr = models.ForeignKey( User)
   code_text = models.TextField()
   lang = models.IntegerField() 

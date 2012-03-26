@@ -93,7 +93,7 @@ def run_question( mda, cmd, output_file, question_input, question_output, occult
       return False
     else :
       if occult :
-        return json_message( '隱藏數據不給看', 'Run_OK' )
+        return json_message( OCCULT_IO, 'Run_OK' )
       else :
         return json_message( '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<', 'check_error' )
   else :
