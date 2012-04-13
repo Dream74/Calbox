@@ -73,3 +73,21 @@ from example.example import example_hello
 def example_code( request, lang_id ):
 	return HttpResponse( example_hello( lang_id )  )
 
+def test( request ):
+  #image_data = open("/path/to/my/image.png", "rb").read()
+  #return HttpResponse(image_data, mimetype="test/txt")
+  if request.user.is_authenticated():
+    m_user = request.user.username
+  else :
+    m_user = datetime.datetime.now().isoformat()
+  m_lang = '11'
+  m_question = '1'
+  html = 'lang :%s<br>user :%s <br>qustion :%s' % ( m_lang, m_user, m_question )
+  if m_user != '' and m_question != '' and m_lang != '' :
+    return HttpResponse(Code.objects.filter()[0].code_text, mimetype="text/txt") 
+    #return HttpResponse('finally')
+  else :
+    html = 'have been space'
+    return HttpResponse(html)
+  
+
