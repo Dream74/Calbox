@@ -1,6 +1,9 @@
 from compiler_c import core as core_c, update_code as update_c, get_code as get_code_c
 from compiler_cc import core as core_cc, update_code as update_cc, get_code as get_code_cc
 from compiler_java import core as core_java, update_code as update_java, get_code as get_code_java
+# cal-x core 
+# input : lang :( supple C, C++, JAVA ), user : user name, code : user input code, question : question index, com_run(bool) : touch run code
+# return : if com_run is True : run message
 def core(lang, user, code , question, com_run ):
   if str.isdigit(  lang.encode('utf-8') ) : 
     lang_type = int( lang.encode('utf-8') ) 
@@ -21,13 +24,12 @@ def core(lang, user, code , question, com_run ):
     return 'lang code no support'
   return 'lang is no integer'
 
-from django.contrib.auth.models import User
-from calbox.cal_x.usr_code.models import Code
-from calbox.cal_x.question.models import Question_Code
+# return user last code record 
 def get_code(lang, user, question ):
   if str.isdigit(  lang.encode('utf-8') ) : 
     lang_type = int( lang.encode('utf-8') ) 
     code = ""
+    # get code from temp file
     if lang_type == 11 : # c
       code = get_code_c(mda( lang, user, question))
     elif lang_type == 1 : # c++
@@ -37,16 +39,16 @@ def get_code(lang, user, question ):
     else :
       return 'lang code no support'
     
+    # if temp file code is empty, try from databast get usr code
     if code == "" :
-      try :
-        return Code.objects.get( usr = User.objects.get( username = user ), lang = lang, question = Question_Code.objects.get( id = question )  ).code_text 
-      except Code.DoesNotExist:
-        return ""
+      from calbox.cal_x.usr_code.models import Code
+      return Code.objects.getcode_text( usr, lang, question ) 
     else :
       return code 
   return 'lang is no integer'
 
-from hashlib import md5
+# cal-x ( lang, user, question) to dir path
 def mda( lang, user, question ) :
   return user.encode('utf-8')  + '_' + question.encode('utf-8')
+  from hashlib import md5
   return md5( user.encode('utf-8')  + '_' + question.encode('utf-8')  ).hexdigest()

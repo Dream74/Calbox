@@ -12,6 +12,12 @@ class CodeManager(models.Manager):
     except Code.DoesNotExist:
       Code( usr = m_usr, lang = m_lang, question = Question_Code.objects.get( id = question_id ), code_text = m_code, updatetime = datetime.datetime.now()  ).save()
 
+  def getcode_text( self, usr, lang, question ):
+    try :
+      return Code.objects.get( usr = User.objects.get( username = usr ), lang = lang, question = Question_Code.objects.get( id = question )  ).code_text
+    except Code.DoesNotExist:
+      return ""
+
 class Code( models.Model ) : 
   question = models.ForeignKey( Question_Code )
   usr = models.ForeignKey( User)

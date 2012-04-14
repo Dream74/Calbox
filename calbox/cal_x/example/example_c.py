@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 def hello():
-	return """#include <stdio.h>
+  return """#include <stdio.h>
 
 int main(void) {
     printf("Hello! World!\\n");

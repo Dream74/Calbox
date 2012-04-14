@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 def hello():
-	return """#include <iostream> 
+  return """#include <iostream> 
 using namespace std; 
 int main() { 
  cout << "Hello! World!\\n"; 
