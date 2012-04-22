@@ -22,6 +22,7 @@
 <script>
 </script>
 <script type="text/javascript" src="/JS/cal-x/utility.js"></script>
+ <script type="text/javascript" src="/JS/jquery.hotkeys.js"></script>
 {% if user.is_authenticated %}
 <script type="text/javascript" src="/JS/date.js"></script>
 <script type="text/javascript" src="/JS/cal-x/login.js"></script>
@@ -42,6 +43,9 @@
 {% endif %}
 <button id="example">範例</button>
 <input type=button onClick="location.href='/admin'" value='題庫'>
+<input type=button disabled="false" onClick="location.href='/showcode'" value='ShowCode'>
+<input type=button disabled="false" onClick="location.href='/'" value='挑戰'>
+<input type=button disabled="false" onClick="location.href='/'" value='作業'>
 <label id="state">系統初始化</label>
 </span>
 <form id="codeform" action="/cal-x/core/" method="POST">{% csrf_token %}
@@ -78,7 +82,7 @@
   	</select>
 	</div>
 	<textarea id="code"	name="code" placeholder="<Input your Code>" >{{ code }}</textarea>		
-	<input type="submit" value="送出" />
+	<input id="run_code_button" type="submit" value="送出<F6>" />
 	<span id="io">
 		<p>Message</p>
 		<textarea id="message" readonly=true  ></textarea>

@@ -59,7 +59,7 @@ def update_post_code( request, com_run ):
             Code.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
 
       # if run code success all I/O test, Code into DabaBase( Code_Done )
-      if request.user.is_authenticated() and com_run and json.loads( html )['type'].encode('utf8') == 'OK': 
+      if request.user.is_authenticated() and com_run and json.loads( html )['type'].encode('utf8') == RUN_OK: 
         from calbox.cal_x.usr_code.models import Code_Done
         Code_Done.objects.insert_code( request.user, int(m_lang), m_code.encode('utf8'), int(m_question) )
     else :

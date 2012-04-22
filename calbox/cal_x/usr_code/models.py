@@ -28,6 +28,9 @@ class Code( models.Model ) :
   def __unicode__(self):
     return unicode(self.usr)
 
+  def __str__(self):
+    return str(self.usr)
+
 class Code_DoneManager(models.Manager):
   def get_my_question_code(self, m_usr, m_lang, question_id ):
     return Code.objects.filter( usr = m_usr, lang = m_lang, question = Question_Code.objects.get( id = question_id )).order_by('-updatetime')[0]
@@ -44,3 +47,7 @@ class Code_Done( models.Model ) :
   objects = Code_DoneManager()
   def __unicode__(self):
     return unicode(self.usr)
+
+  def __str__(self):
+    return str(self.usr)
+
