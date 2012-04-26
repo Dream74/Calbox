@@ -20,51 +20,26 @@
 <script type="text/javascript" src="/jquery-ui/ui/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="/jquery-ui/ui/jquery.ui.tabs.js"></script>
 <script type="text/javascript" src="/JS/cal-x/utility.js"></script>
- <script type="text/javascript" src="/JS/jquery.hotkeys.js"></script>
-{% if user.is_authenticated %}
-<script type="text/javascript" src="/JS/date.js"></script>
-<script type="text/javascript" src="/JS/cal-x/login.js"></script>
-{% else %}
-<script type="text/javascript" src="/JS/cal-x/nologin.js"></script>
-{% endif %}
 {% endblock %}
 
 {% block content %}
 <span id="fun-area">
-{% if user.is_authenticated %}
-歡迎, {{ user.username }}. 登入.
-<a href="/accounts/logout/" >登出</a>
-&nbsp;&nbsp;<a href="/accounts/password_change/">變更密碼</a>
-{% else %}
-<a href="/accounts/signup/" >註冊</a>&nbsp;&nbsp;
-<a href="/accounts/login/" >登入</a>
-{% endif %}
 <button id="example">範例</button>
 <input type=button onClick="location.href='/admin'" value='題庫'>
-<input type=button disabled="false" onClick="location.href='/show'" value='ShowCode'>
 <input type=button disabled="false" onClick="location.href='/'" value='挑戰'>
 <input type=button disabled="false" onClick="location.href='/'" value='作業'>
 <label id="state">系統初始化</label>
 </span>
 <form id="codeform" action="/cal-x/core/" method="POST">{% csrf_token %}
-<label>題目</label>
-<select name="question" id="question" >
-{% if q_list %}
-	{% for list in q_list %}
-	<option value="{{ list.id }}" label="{{ list.title }}">{{ list.title }}</option>
-	{% endfor %}
-{% endif %}
-</select>
-
 <label>程式語言</label>
 <select name="lang" id="lang" >
-	<option value="11" label="C" title="C (gcc-4.6.1)" >C</option>
-	<option value="1" label="C++" title="C++ (gcc-4.6.1)" >C++</option>
-	<option value="10" label="Java"  title="Java (sun-jdk-1.6.0.30)" >Java</option>
+  <option value="11" label="C" title="C (gcc-4.6.1)" >C</option>
+  <option value="1" label="C++" title="C++ (gcc-4.6.1)" >C++</option>
+  <option value="10" label="Java"  title="Java (sun-jdk-1.6.0.30)" >Java</option>
 </select>
+
 <div id="tabs">
 	<ul>
-		<li><a href="#tabs-2">Question Doc</a></li>
 		<li><a href="#tabs-1">Code</a></li>
 	</ul>
 	<div id="tabs-1">
@@ -80,12 +55,19 @@
   	</select>
 	</div>
 	<textarea id="code"	name="code" placeholder="<Input your Code>" >{{ code }}</textarea>		
-	<input id="run_code_button" type="submit" value="送出<F6>" />
+	<input id="run_code_button" type="submit" value="送出" />
+	<span id="input">
+		<p>Input</p>
+		<textarea id="input_textarea" class="IO_message" ></textarea>
+	</span>
+	<span id="Output">
+		<p>Output</p>
+		<textarea id="output_textarta"class="IO_message" ></textarea>
+	</span>
 	<span id="io">
 		<p>Message</p>
 		<textarea id="message" class="IO_message" readonly=true  ></textarea>
 	</span>
 	</div>
-	<div id="tabs-2"></div>
 </div>
 {% endblock %}
