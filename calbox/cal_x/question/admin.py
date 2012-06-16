@@ -55,12 +55,10 @@ class Question_Code_Admin( admin.ModelAdmin ):
   def my_delete_selected(self, request, queryset):
     for ques in queryset:
       ques.delete() 
-  my_delete_selected.short_description = 'delete selected Question_Code'
+  my_delete_selected.short_description = 'delete selected Question_Code test'
 
 class Question_Time_Admin( admin.ModelAdmin ):
 	question_time = ( 'start', 'end', 'perm'  )
 
 admin.site.register( Question_Code, Question_Code_Admin )
-#admin.site.register( Question_IO, Question_IO_Admin  )
 admin.site.register( Question_Time, Question_Time_Admin )
-#admin.site.disable_action('delete_selected')

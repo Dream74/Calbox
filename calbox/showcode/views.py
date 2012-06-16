@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+from django.shortcuts import render_to_response
 # cal-x HTML home index call code
 def index(request):
-  from django.shortcuts import render_to_response
-  #return HttpResponse('close showcode')
-  return render_to_response('showcode/index.html')
-
+  from django.core.context_processors import csrf
+  c = {}
+  c.update( csrf(request) )
+  return render_to_response('showcode/index.html', c )

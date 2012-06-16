@@ -13,18 +13,23 @@ class Usr_Code_Done_Admin( admin.ModelAdmin ):
   def download_code(self, request, queryset):
     from django.http import HttpResponse
     import zipfile, datetime, os
-    from calbox.cal_x.kernel.conf import *
-    zippath = "/dev/shm/ramdisk/TEMP/"+ datetime.datetime.now().isoformat() +".zip"
+    from calbox.cal_x.kernel.conf import conf
+    from calbox.cal_x.kernel.compiler import compiler as c_compiler
+    from calbox.cal_x.kernel.compiler_cc import compiler_cc as cc_compiler
+    from calbox.cal_x.kernel.compiler_java import compiler_java as java_compiler
+
+    zippath = conf.BINARY_DIR + datetime.datetime.now().isoformat() +".zip"
+    #zippath = "/dev/shm/ramdisk/temp/"+ datetime.datetime.now().isoformat() +".zip"
     file = zipfile.ZipFile(zippath, "w")
     for ques in queryset:
-      if ques.lang == LANG_C :
-        file.writestr(ques.usr.username+FE_C , ques.code_text.encode('utf8') )
-      elif ques.lang == LANG_CC :
-        file.writestr(ques.usr.username+FE_CC , ques.code_text.encode('utf8') )
-      elif ques.lang == LANG_JAVA :
-        file.writestr(ques.usr.username+FE_JAVA , ques.code_text.encode('utf8') )
-      else :
-        file.writestr(ques.usr.username , ques.code_text.encode('utf8') )
+      s = ""
+      if ques.lang == c_compiler().getLang() :
+        s = c_compiler().getFE() 
+      elif ques.lang == cc_compiler().getLang() :
+        s = cc_compiler().getFE() 
+      elif ques.lang == java_compiler().getLang() :
+        s = java_compiler().getFE() 
+      file.writestr(ques.usr.username + s , ques.code_text.encode('utf8') )
 
     file.close()
     
@@ -33,25 +38,6 @@ class Usr_Code_Done_Admin( admin.ModelAdmin ):
     os.remove(zippath)
     return response
     
-    #html += str( ques.updatetime ) + "<br>"
-    #return HttpResponse(html)
-    """def test( request ):
-    #image_data = open("/path/to/my/image.png", "rb").read()
-    #return HttpResponse(image_data, mimetype="test/txt")
-    if request.user.is_authenticated():
-      m_user = request.user.username
-  else :
-    m_user = datetime.datetime.now().isoformat()
-  m_lang = '11'
-  m_question = '1'
-  html = 'lang :%s<br>user :%s <br>qustion :%s' % ( m_lang, m_user, m_question )
-  if m_user != '' and m_question != '' and m_lang != '' :
-    return HttpResponse(Code.objects.filter()[0].code_text, mimetype="text/txt")
-    #return HttpResponse('finally')
-  else :
-    html = 'have been space'
-    return HttpResponse(html)
-"""
   download_code.short_description = 'Download select Code'
 
 

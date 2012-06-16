@@ -14,8 +14,8 @@ class CodeManager(models.Manager):
 
   def getcode_text( self, usr, lang, question ):
     try :
-      return Code.objects.get( usr = User.objects.get( username = usr ), lang = lang, question = Question_Code.objects.get( id = question )  ).code_text
-    except Code.DoesNotExist:
+      return Code.objects.filter( usr = usr, lang = lang, question = Question_Code.objects.get( id = question )  ).order_by('-updatetime')[0].code_text
+    except :
       return ""
 
 class Code( models.Model ) : 
@@ -32,8 +32,11 @@ class Code( models.Model ) :
     return str(self.usr)
 
 class Code_DoneManager(models.Manager):
-  def get_my_question_code(self, m_usr, m_lang, question_id ):
-    return Code.objects.filter( usr = m_usr, lang = m_lang, question = Question_Code.objects.get( id = question_id )).order_by('-updatetime')[0]
+  def get_my_question_code(self, m_usr, question_id ):
+    return Code_Done.objects.filter( usr = m_usr, question = Question_Code.objects.get( id = question_id )).order_by('-updatetime')[0]
+
+  def get_my_code(self, m_usr ):
+    return Code_Done.objects.filter( usr = m_usr).order_by('-updatetime')
 
   def insert_code( self, m_usr, m_lang, m_code, question_id ):
     Code_Done( usr = m_usr, lang = m_lang, question = Question_Code.objects.get( id = question_id ), code_text = m_code, updatetime = datetime.datetime.now()  ).save()

@@ -15,8 +15,8 @@ function uws_start() {
 				-w ${uwsgi_module} \
 				--master --pidfile=/tmp/project-master.pid \
         --buffer-size=32768 \
-				--daemonize=./${log_dir}/uwsgi_${datetime}.log \
-				--processes=30 &
+				--processes=30 & \
+	#			--daemonize=./${log_dir}/uwsgi_${datetime}.log 
 }
 
 function uws_stop() {

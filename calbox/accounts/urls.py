@@ -7,7 +7,8 @@ urlpatterns = patterns('django.contrib.auth.views',
 
                        (r'^logout/$', 
                         'logout', 
-                        {'template_name': 'accounts/logged_out.html'}),
+                        {'template_name': 'accounts/logged_out.html',
+                        'next_page': '/cal-x/'}),
 
                        (r'^password_change/$', 
                         'password_change', 
