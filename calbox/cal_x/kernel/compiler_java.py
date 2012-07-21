@@ -9,7 +9,7 @@ class compiler_java(compiler):
   _LANG = 10
   _COM_TOOL = "javac"
   _RUNCMD = "java "
-  _CMD = ''
+  _CMD = '-Xlint'
 
   def compiler_code( self, cmd = '' ):
     file_code = self.FILE_DIR + self._mda + '/' + self._FN + self._FE
@@ -25,6 +25,6 @@ class compiler_java(compiler):
                                , stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     pingPopen.wait()
     self._compiler_mes = pingPopen.stderr.read()
-    self._compiler_state = os.path.exists( binary_file + ".class" )
+    self._compiler_state = os.path.exists( binary_file + ".class" ) and not "error" in self._compiler_mes
     return self._compiler_state
 

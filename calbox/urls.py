@@ -13,7 +13,7 @@ urlpatterns = patterns('calbox.views',
 urlpatterns += patterns('',
 		url(r'^accounts/', include('calbox.accounts.urls')),
 		url(r'^cal-x/', include('calbox.cal_x.urls')),
-		url(r'^show/', include('calbox.showcode.urls')),
+		url(r'^testcode/', include('calbox.testcode.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^noscript/$', 'django.views.defaults.permission_denied' ),
 )

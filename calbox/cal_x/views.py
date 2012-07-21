@@ -6,16 +6,17 @@ def code(request, homework ):
   #if not request.user.is_authenticated():
   #  from django.http import HttpResponseRedirect
   #  return HttpResponseRedirect("/accounts/login/")
-
   from django.core.context_processors import csrf
   c = {}
   c.update( csrf(request) )
   q_list = []
   try :
-    if request.user.is_authenticated() and homework  :
+    if request.user.is_superuser :
+      q_list = Question_Code.objects.all().order_by('id')
+    elif request.user.is_authenticated() and homework  :
       q_list =  Question_Code.objects.get_usr_question( request.user ) 
     elif not homework :
-      q_list =  Question_Code.objects.get_all_question()
+      q_list =  Question_Code.objects.filter( occult=False ).order_by('id')
   except Question_Code.DoesNotExist:
       q_list = []
 
@@ -59,7 +60,7 @@ def update_post_code( request, com_run ):
 
       # user login state, code into database( Code ), next login push down
       if com_run :
-        if request.user.is_superuser and request.POST.get('supermode', '') == "true" :
+        if request.user.is_superuser and request.POST.get('supermode', 'False') == "true" :
           m_supermode = True
       else :
         from calbox.cal_x.usr_code.models import Code
@@ -73,7 +74,7 @@ def update_post_code( request, com_run ):
     if com_run and m_user != '' and m_question != '' and m_lang != '' :
       from kernel.kernel import core
       from kernel.conf import conf
-      html = core( m_lang, m_user, m_code, m_question, m_supermode )
+      html = core( m_lang, m_user, m_code, m_question).kernel( IO_rate = m_supermode )
       # if run code success all I/O test, Code into DabaBase( Code_Done )
       if not m_supermode and request.user.is_authenticated() and json.loads( html )['type'].encode('utf8') == conf.RUN_OK:         
         from calbox.cal_x.usr_code.models import Code_Done
@@ -104,8 +105,12 @@ def mycode( request ):
     if m_question != '' and m_lang != '' :
       #return HttpResponse( json.dumps({"code": "" , "readline": ''}, sort_keys=True, indent=4, ensure_ascii = False) )
       # return json format( code: last recored code, readline : textarea readline number )
-      from calbox.cal_x.usr_code.models import Code
-      return HttpResponse( json.dumps({"code": Code.objects.getcode_text( request.user, m_lang, m_question ) , "readline": ''}, ensure_ascii = False) )
+      from calbox.cal_x.usr_code.models import Code, Code_Done
+      code = Code_Done.objects.get_my_question_code( request.user, m_question )
+      if code :
+        return HttpResponse( json.dumps({"code": code.code_text , "readline": 'true'}, ensure_ascii = False) )
+      else :
+        return HttpResponse( json.dumps({"code": Code.objects.getcode_text( request.user, m_lang, m_question ) , "readline": ''}, ensure_ascii = False) )
       #return HttpResponse( json.dumps({"code": get_code( m_lang, m_user, m_question ) , "readline": '0,2,5,6,'}, sort_keys=True, indent=4, ensure_ascii = False) )
   return HttpResponse( json.dumps({"code": "" , "readline": ''}, ensure_ascii = False) )
 

@@ -33,8 +33,10 @@ class Code( models.Model ) :
 
 class Code_DoneManager(models.Manager):
   def get_my_question_code(self, m_usr, question_id ):
-    return Code_Done.objects.filter( usr = m_usr, question = Question_Code.objects.get( id = question_id )).order_by('-updatetime')[0]
-
+    code =  Code_Done.objects.filter( usr = m_usr, question = Question_Code.objects.get( id = question_id )).order_by('-updatetime')
+    if len(code) :
+      return code[0]
+    return False 
   def get_my_code(self, m_usr ):
     return Code_Done.objects.filter( usr = m_usr).order_by('-updatetime')
 

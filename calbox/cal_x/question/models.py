@@ -5,7 +5,7 @@ class CodeManager(models.Manager):
   def get_all_question(self):
     return Question_Code.objects.all().order_by('id')
 
-  def get_all_qeustion_json( self, id ):
+  def get_all_question_json( self, id ):
     from django.core import serializers
     return serializers.serialize('json', Question_Code.objects.all(), fields=('title'), sort_keys = True, indent = 0, ensure_ascii = False )
 
@@ -46,8 +46,15 @@ class Question_Code( models.Model ) :
     #	Permission.objects.get( name=self.title )
     # except Permission.DoesNotExist:
     if not Permission.objects.filter( name=self.title ):
-      from django.contrib.contenttypes.models import ContentType
-      p = Permission( name=self.title, content_type=ContentType.objects.get( name='question_ code'), codename=self.title+'_'+ self.usr.username)
+      from django.contrib.contenttypes.models import ContentType  
+      p = None 
+      try :
+        p = self.perm
+        p.name = self.title
+        p.codename = self.title+'_'+self.usr.username
+      except Permission.DoesNotExist :
+        p = Permission( name=self.title, content_type=ContentType.objects.get( name='question_ code'), codename=self.title+'_'+ self.usr.username)
+
       p.save()
       self.perm = p 
     super(Question_Code, self).save()

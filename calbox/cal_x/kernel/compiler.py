@@ -16,11 +16,18 @@ class compiler(conf):
   _compiler_mes = None 
   _run_state = None
   _run_mes = None 
-  _code_mes = None 
+  _Rout = None 
+  _Qout = None 
   _rate_mes = None
   _mda = None
   _usr = None
   _ulimit = None  
+
+  def getQout(self):
+    return self._Qout
+
+  def getRout(self):
+    return self._Rout
 
   def getLang(self):
     return self._LANG
@@ -95,7 +102,7 @@ class compiler(conf):
     # set code
     else :
       if len( code ) > self.CODE_FILE :
-        self._code_mes = self.CODE_SIZE_LIMIT
+        self._compiler_mes = self.CODE_SIZE_LIMIT
         return False
 
       code_dir = self.FILE_DIR + self._mda + '/' 
@@ -140,12 +147,12 @@ class compiler(conf):
   # 我想用字典方式回傳error	
   def message( self, mess_type, message = "", IO_rate = False ) :
     import json
-    import re
+    #import re
     if IO_rate :
-      return json.dumps( self._rate_mes , ensure_ascii = False, indent = 4)
-      #return json.dumps( self._rate_mes , ensure_ascii = False)
+      return json.dumps( self._rate_mes , ensure_ascii = False)
 
-    return json.dumps({"message": re.compile( r'.+[\\\/]').sub( '', message ), "type": mess_type, "compiler_warn": re.compile( r'.+[\\\/]').sub( '', self._compiler_mes ) }, ensure_ascii = False)
+    #return json.dumps({"message": re.compile( r'.+[\\\/]').sub( '', message ), "type": mess_type, "compiler_warn": re.compile( r'.+[\\\/]').sub( '', self._compiler_mes ) }, ensure_ascii = False)
+    return json.dumps({"message": message , "type": mess_type, "compiler_warn": self._compiler_mes }, ensure_ascii = False)
 	  # debug 排版用
     #return json.dumps({"message": re.compile( r'.+[\\\/]').sub( '', message ), "type": mess_type, "compiler_warn": re.compile( r'.+[\\\/]').sub( '', self.__compiler_mes ) }, sort_keys=True, indent=4)
 
@@ -173,7 +180,7 @@ class compiler(conf):
 	                             , stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     pingPopen.wait()
     self._compiler_mes = pingPopen.stderr.read()
-    self._compiler_state = os.path.exists( binary_file )
+    self._compiler_state = os.path.exists( binary_file ) 
     return self._compiler_state
 
   # run all I/O, and check 
@@ -191,35 +198,29 @@ class compiler(conf):
           # run error
           IOinput = list["input"].encode('utf-8')
           IOoutput = list["output"].encode('utf-8')
-          occult = list["occult"]
-          if not self.run( IOinput, IOoutput, occult ) :
-            if IO_rate :
-              self._rate_mes += [ { "message" : self._run_mes, "type" : self.COMPARE_ERR } ]
-              #self._rate_mes += [ { "type" : self.COMPARE_ERR } ]
-            else :  
-              return self.message( self.COMPARE_ERR, self._run_mes )
-          elif IO_rate :
-            self._rate_mes += [ { "message" : self.RUN_AND_CHECK_SUCCESS, "type" : self.RUN_OK } ]
-            #self._rate_mes += [ { "type" : self.RUN_OK } ]
+          occult = False
+          if not self.run( IOinput, IOoutput, occult ) and not IO_rate:
+            return self.message( self.getRunState(), self.getRunMes() )
+          if IO_rate:
+            self._rate_mes += [ { "message" : self.getRunMes(), "type" : self.getRunState() } ]
       else :
         from calbox.cal_x.question.models import Question_IO
-        question_io_list = Question_IO.objects.get_question_io( self._question ) 
+        question_io_list = None
+        try :
+          question_io_list = Question_IO.objects.get_question_io( self._question ) 
+        except Question_IO.DoesNotExist :
+          return self.message( self.UNKNOW_ERR, 'Question no get!!!')
         for list in question_io_list :
           IOinput = list.input_text.encode('utf-8')
           IOoutput = list.output_text.encode('utf-8')
           occult = list.occult
-          if not self.run( IOinput, IOoutput, occult ) :
-            if IO_rate :
-              self._rate_mes += [ { "message" : self._run_mes, "type" : self.COMPARE_ERR } ]
-              #self._rate_mes += [ { "type" : self.COMPARE_ERR } ]
-            else :  
-              return self.message( self.COMPARE_ERR, self._run_mes )
-          elif IO_rate :
-            self._rate_mes += [ { "message" : self.RUN_AND_CHECK_SUCCESS, "type" : self.RUN_OK } ]
-            #self._rate_mes += [ { "type" : self.RUN_OK } ]
+          if not self.run( IOinput, IOoutput, occult ) and not IO_rate:
+            return self.message( self.getRunState(), self.getRunMes() )
+          if IO_rate:
+            self._rate_mes += [ { "message" : self.getRunMes(), "type" : self.getRunState() } ]
       return self.message( self.RUN_OK, self.RUN_AND_CHECK_SUCCESS, IO_rate )
     except :
-      return self.message( self.UNKNOW_ERR, 'Question no get!!!')
+      return self.message( self.UNKNOW_ERR, 'UNKOW_ERR!!!')
 	  
   def run( self, question_input = "", question_output = "",  occult = False ):
     output_dir = self.OUTPUT_DIR + self._mda + '/'
@@ -241,17 +242,22 @@ class compiler(conf):
     if errm == '' :
       code_output = open( output_file, 'r' ).read()
 	    #window new line \r\n replace to linux \n
-      if question_output.replace('\r\n', '\n') == code_output :
+      if question_output.replace('\r\n', '\n') == code_output.replace('\r\n', '\n') :
         return self.run_state( self.RUN_OK, self.RUN_AND_CHECK_SUCCESS )
       else :
         if occult :
+          self._Qout = self.OCCULT_IO
+          self._Rout = code_output
           return self.run_state( self.COMPARE_ERR, self.OCCULT_IO )
         else :
+          self._Qout = question_output
+          self._Rout = code_output
           return self.run_state( self.COMPARE_ERR, '數據輸入 :' + question_input + '<<\n正確輸出 :' + question_output + '<<\n你程式輸出 :' + code_output + '<<' ) 
     else :
       if errm == 'CPU time limit exceeded\n' :
         return self.run_state( self.INFINITE_LOOP ) 
-      return self.run_state( errm ) 
+
+      return self.run_state( self.RUN_ERR, errm ) 
 
   def run_state( self, state , mes=""):
     self._run_state = state

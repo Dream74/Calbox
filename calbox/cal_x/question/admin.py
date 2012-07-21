@@ -1,8 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
 from calbox.cal_x.question.models import Question_Code, Question_IO, Question_Time
 
 class Question_IO_Admin( admin.ModelAdmin ):
-	#question_io = ( 'input_text', 'output_text', 'question' , 'usr', 'occult' )
   list_display = ('question', 'input_text', 'output_text', 'occult', 'usr')
   fieldsets = [ 
         ('input_text', {'fields':['input_text']}),
@@ -16,7 +16,7 @@ class Question_IO_Admin( admin.ModelAdmin ):
     if change :
       obj.usr = request.user
       #obj.occult = False
-      obj.save() 
+      obj.save()
 
 class Question_IO_inline(admin.TabularInline):
   model = Question_IO
@@ -27,7 +27,6 @@ class Question_IO_inline(admin.TabularInline):
         ('question', {'fields':['question']}),
         ('Occult', {'fields':['occult']}),
   ]  
-from django.contrib.auth.models import User
 class Question_Code_Admin( admin.ModelAdmin ):
   list_display = ('title', 'occult', 'usr')
   fieldsets = [ 
@@ -45,7 +44,7 @@ class Question_Code_Admin( admin.ModelAdmin ):
   inlines = [Question_IO_inline]
   def save_model(self, request, obj, form, change):
     obj.usr = request.user
-    return super(Question_Code_Admin, self).save_model(request, obj, form, change)
+    obj.save()
 
   def save_formset(self, request, form, formset, change):
     for form1 in formset.forms:
