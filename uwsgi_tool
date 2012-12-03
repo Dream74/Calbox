@@ -21,7 +21,6 @@ function uws_start() {
 
 function uws_stop() {
 	echo 'stop uwsgi'
-	#kill -SIGTERM $(ps aux | grep uwsgi | grep $uwsgi_module | awk '{print $2}') 
 	sudo killall -9 uwsgi 
 }
 
@@ -35,6 +34,7 @@ elif [ "$1" == "stop" ] ; then
 	uws_stop ;
 elif [ "$1" == "restart" ] || [ "$#" == "0" ]  ; then
 	uws_stop ;
+  sleep 2
 	uws_start ;
 elif [ "$1" == "state" ] ; then
 	uws_state ;
