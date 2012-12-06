@@ -214,10 +214,12 @@ class compiler(conf):
           IOinput = list.input_text.encode('utf-8')
           IOoutput = list.output_text.encode('utf-8')
           occult = list.occult
-          if not self.run( IOinput, IOoutput, occult ) and not IO_rate:
-            return self.message( self.getRunState(), self.getRunMes() )
-          if IO_rate:
-            self._rate_mes += [ { "message" : self.getRunMes(), "type" : self.getRunState() } ]
+          if not occult or self.RUN_OCCULT_INPUT_LIST  :
+            if not self.run( IOinput, IOoutput, occult ) and not IO_rate:
+              return self.message( self.getRunState(), self.getRunMes() )
+            if IO_rate:
+              self._rate_mes += [ { "message" : self.getRunMes(), "type" : self.getRunState() } ]
+
       return self.message( self.RUN_OK, self.RUN_AND_CHECK_SUCCESS, IO_rate )
     except :
       return self.message( self.UNKNOW_ERR, 'UNKOW_ERR!!!')

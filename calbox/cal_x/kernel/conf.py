@@ -5,7 +5,7 @@ class conf:
   FILE_DIR = CAL_X_HOME + 'code/'
   BINARY_DIR = CAL_X_HOME + 'temp/'
   OUTPUT_DIR = CAL_X_HOME + 'output/'
-
+  
   #run limit
   CPU_TIME = '3' # 5 sec
   CODE_FILE =  str( 64 * 1024 / 2 )  # 64 KB
@@ -25,3 +25,4 @@ class conf:
   OCCULT_IO = '你無法通過被隱藏的數據'
   RUN_AND_CHECK_SUCCESS = '你程式通過所有測試數據'
   
+  RUN_OCCULT_INPUT_LIST = False

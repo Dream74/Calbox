@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
 from django.http import HttpResponse
 from calbox.cal_x.question.models import Question_Code
 # cal-x HTML home index call code
-def code(request, homework ):
+def code(request, homework, template_name ):
+  if request.META['HTTP_USER_AGENT'] is None or (not 'MSIE' in request.META['HTTP_USER_AGENT'].upper() ) :
+    return HttpResponse('請使用 IE 瀏覽器 謝謝!!')
+
   # if user non-login, you can reload to login HTML
   #if not request.user.is_authenticated():
   #  from django.http import HttpResponseRedirect
@@ -34,7 +38,7 @@ def code(request, homework ):
     qlist = q_list 
   c.update( { 'user' : request.user, 'q_list' : qlist } )
   from django.shortcuts import render_to_response
-  return render_to_response('cal_x/index.html', c)
+  return render_to_response(template_name, c)
 
 import json
 # user steps : update_post_code -> core ( run )

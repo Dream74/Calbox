@@ -5,8 +5,8 @@ from calbox.cal_x.question.models import Question_Code
 # admin.autodiscover()
 
 urlpatterns = patterns('calbox.cal_x.views',
-	(r'^$', 'code', {'homework' : False}),
-	(r'^homework$', 'code', {'homework' : True }),
+	(r'^$', 'code', {'homework' : False, 'template_name' : 'cal_x/index.html' }),
+	#(r'^homework$', 'code', {'homework' : True, 'template_name' : 'cal_x/index.html' }),
 	(r'^core/$', 'update_post_code', { 'com_run' : True} ),
 	(r'^update_code/$', 'update_post_code', { 'com_run' : False}),
 	(r'^doc/(\d+)$', 'question_doc'),
