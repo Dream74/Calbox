@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery demo</title>
+</head>
+<body>
+ </body>
+	<label id="text">Init..</label>
+	<form action="/update_code/" method="POST">
+		<textarea 	name="code" 
+			        rows="10" 
+				cols="100" 
+				placeholder="<Input your Code>" >#include <iostream>
+using namespace std;
+int main( int argc, char * argv[] ) 
+{
+  int num1, num2 ;
+  cin >> num1 >> num2 ;
+  cout << num1 + num2 ;
+  return 0 ;
+}</textarea>		
+		<br/>
+chapter: <input type="text" name="chapter" value="1"/ ><br />
+User name: <input type="text" name="user" value="1"/><br />
+		<input type="submit" value="Submit" />
+	</form>
+</html>
+

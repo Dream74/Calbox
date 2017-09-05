@@ -1,0 +1,25 @@
+﻿{% extends "cal_x/base.html"%}
+{% block title %}CAL-X exam{% endblock %}
+{% block calbox_type %} {% include "cal_x/calbox_type.html" %} {% endblock %}
+{% block UsrJS %}
+<script type="text/javascript" src="/JS/cal-x/utility.js"></script>
+<script type="text/javascript" src="/JS/cal-x/testcode.js"></script>
+<script type="text/javascript" src="/JS/jquery.hotkeys.js"></script>
+{% if user.is_authenticated %}
+<script type="text/javascript" src="/JS/date.js"></script>
+<script type="text/javascript" src="/JS/cal-x/login.js"></script>
+{% endif %}
+
+{% endblock %}
+
+{% block ResponMess %}
+  <span id="input">
+    <p>輸入數據:</p>
+    <textarea id="input_textarea" class="IO_message" ></textarea>
+  </span>
+  <span id="Output">
+    <p>輸出數據:</p>
+    <textarea id="output_textarea" class="IO_message" readonly=true ></textarea>
+  </span>
+{% endblock %}
+{% block CFormUrl %}/exam/core/{% endblock %}

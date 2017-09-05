@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}calbox-base{% endblock %}
+{% block head %}
+<link rel="stylesheet" TYPE="text/css" href="/codemirror/lib/codemirror.css">
+<link rel="stylesheet" TYPE="text/css" href="/CSS/docs.css">
+<script type="text/javascript" src="/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="/codemirror/mode/clike/clike.js"></script>
+<link rel="stylesheet" href="/codemirror/theme/neat.css">
+<link rel="stylesheet" href="/codemirror/theme/elegant.css">
+<link rel="stylesheet" href="/codemirror/theme/night.css">
+<link rel="stylesheet" href="/codemirror/theme/monokai.css">
+<link rel="stylesheet" href="/codemirror/theme/cobalt.css">
+<link rel="stylesheet" href="/codemirror/theme/eclipse.css">
+<link rel="stylesheet" href="/codemirror/theme/rubyblue.css">
+
+<script type="text/javascript" src="/codemirror/mode/javascript/javascript.js"></script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ></script>
+
+<script type="text/javascript" src="/jquery-ui/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="/jquery-ui/js/ui.selectmenu.js"></script>
+<link rel="stylesheet" TYPE="text/css" href="/jquery-ui/css/redmond/jquery-ui-1.8.21.custom.css">
+<link rel="stylesheet" TYPE="text/css" href="/jquery-ui/css/ui.selectmenu.css">
+
+
+{% block UsrJS %}
+<script type="text/javascript" src="/JS/cal-x/utility.js"></script>
+<script type="text/javascript" src="/JS/jquery.hotkeys.js"></script>
+{% if user.is_superuser %}
+<script type="text/javascript" src="/JS/cal-x/super.js"></script>
+{% else %}
+<script type="text/javascript" src="/JS/cal-x/nosuper.js"></script>
+{% endif %}
+
+{% if user.is_authenticated %}
+<script type="text/javascript" src="/JS/date.js"></script>
+<script type="text/javascript" src="/JS/cal-x/login.js"></script>
+{% endif %}
+
+{% endblock %}
+
+{% if not user.is_authenticated %}
+<meta http-equiv="refresh" content="0; URL=/accounts/login/" />
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+{% block calbox_type %}{% endblock %}
+<form id="codeform" action="{% block CFormUrl %}/cal-x/core/{% endblock %}" method="POST">{% csrf_token %}
+{% block Qlabel %}
+{% if q_list and q_list|length > 0 %}
+<label>題目</label>
+<select name="question" id="question" >
+	{% for list in q_list %}
+	<option value="{{ list.id }}" label="{{ list.title }}" {% if list.done %}title="已完成" style="color:red;" class="question_done"{% endif %}>{{ list.title }}</option>
+	{% endfor %}
+</select>
+{% endif %}
+{% endblock %}
+{% block PLlabel %}
+<label>程式語言</label>
+<select name="lang" id="lang" >
+{% block PL %}
+	<option value="11" label="C" title="C (gcc-4.6.1)" >C</option>
+	<option value="1" label="C++" title="C++ (gcc-4.6.1)" >C++</option>
+	<option value="10" label="Java"  title="Java (sun-jdk-1.6.0.30)" >Java</option>
+{% endblock %}
+{% endblock %}
+</select>
+<div id="tabs">
+	<ul>
+{% if q_list and q_list|length > 0 %}
+		<li><a href="#tabs-2">Question Doc</a></li>
+{% endif %}
+		<li><a href="#tabs-1">Code</a></li>
+	</ul>
+	<div id="tabs-1">
+<table id="hbox" style="width:100%;height:100%"><tbody><tr>
+	<td style="width:80%">
+		<div style="height:100%;">
+	<span>Select a theme: <select id="code_theme">
+    <option selected>default</option>
+    <option>night</option>
+    <option>monokai</option>
+    <option>neat</option>
+    <option>elegant</option>
+    <option>cobalt</option>
+    <option>eclipse</option>
+    <option>rubyblue</option>
+  	</select>
+	</span>
+{% if user.is_superuser %}
+<input value="OK" id="supermode" type="checkbox"/>考卷模式
+{% endif  %}
+	<textarea id="code"	name="code" placeholder="<Input your Code>" >{{ code }}</textarea>		
+	<input id="run_code_button" type="submit" value="送出<F9>" />
+		</div>
+	</td>
+	<td style="width:20%">
+{% block ResponMess %}{% endblock %}
+	<span id="io">
+		<p>編譯器訊息</p>
+		<textarea id="message" class="IO_message" readonly=true ></textarea>
+	</span>
+	</td>
+</tr></tbody></table>
+	</div>
+
+{% if q_list %}
+	<div id="tabs-2"></div>
+{% endif %}
+
+</div>
+</form>
+{% endblock %}

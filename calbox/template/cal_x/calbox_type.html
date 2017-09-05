@@ -1,0 +1,18 @@
+{% block calboxtype %}
+<span id="fun-area">
+{% if user.is_authenticated %}
+歡迎, {{ user.username }}. 登入.
+<a href="/accounts/logout/" >登出</a>
+&nbsp;&nbsp;<a href="/accounts/password_change/">變更密碼</a>
+{% else %}
+<a href="/accounts/signup/" >註冊</a>&nbsp;&nbsp;
+<a href="/accounts/login/" >登入</a>
+{% endif %}
+<button id="example">範例</button>
+<!--input type=button onClick="location.href='/admin'" value='題庫'-->
+<!--input type=button onClick="location.href='/testcode'"  value='TestCode'-->
+<!--input type=button onClick="location.href='/cal-x'"  value="挑戰"-->
+<!--input type=button onClick="location.href='/cal-x/homework'" disabled=true value='作業'-->
+<label id="state">系統初始化</label>
+</span>
+{% endblock %}

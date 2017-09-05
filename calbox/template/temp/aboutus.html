@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}關於我們{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.main-content{  
+color: #333;
+font-size: 14px;
+height: 345px;
+line-height: 13px;
+max-width: 1000px;
+min-width: 780px;
+/*background-color:#FF0000;*/
+}
+.main-content-center
+{
+padding-bottom: 100px;
+padding-left: 20%;
+padding-right: 0%;
+padding-top: 33px;
+/*background-color:#33FFFF;*/
+line-height : 16px ; 
+}
+#mark
+{
+font-size: 24px ;
+color: red ;
+}
+#mark-content
+{
+line-height: 44px;
+}
+.content
+{
+font-size: 16px;
+line-height : 25px ; 
+}
+.title
+{
+font-size: 20px;
+line-height : 40px ; 
+
+}
+</style>
+<div class="main-content">
+<div class="main-content-center">
+<div id="mark">CALBOX</div><br>
+<div id="mark-content">歡迎立刻註冊帳號，享用更多CALBOX提供的功能。</div>
+<div class="title">關於我們</div>
+<div class="content">一群對程式有興趣的夥伴，...算是吧。</div>
+<div class="title">目標</div>
+<div class="content">既然軟體對於資訊系來說，是個工具或者是成品，那何不運用自己的能力。改變對現實中的不滿。</div>
+<div class="title" ><a href="mailto:calbox74@gmail.com?subject=CALBOX">聯絡我們</a></div>
+{% include 'copyright.html' %}
+</div>
+</div>
+{% endblock %}
+
+~                                                            
