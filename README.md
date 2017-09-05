@@ -6,8 +6,8 @@ calbox 是 線上程式編譯
 遠見 :利用系統督導矯正學生寫程式(程式風格)，並且針對程式copy問題解決。
 
 系統架構 :
-系統: python
-資料庫 : postgrsesql
+系統: Python
+資料庫 : PostgrseSQL
 E-mail : Gmail
 後端使用 :Django
 前端 :jQuery, CodeMirror
